@@ -66,28 +66,41 @@ void HeapInterface<THeap>::clear () {
     array_.clear();
 }
 
-const int _TESTING__NUM_OF_ITERATIONS = 1000000;
-const int _TESTING__CHANCE_OF_ADD_HEAP      = 1;
-const int _TESTING__CHANCE_OF_INSERT        = 1;
-const int _TESTING__CHANCE_OF_GET_MIN       = 1;
-const int _TESTING__CHANCE_OF_EXTRACT_MIN   = 1;
-const int _TESTING__CHANCE_OF_MELD          = 1;
+class _TESTING_PARAMETRES_ {
+public:
+    int NUM_OF_ITERATIONS;
+    int CHANCE_OF_ADD_HEAP;
+    int CHANCE_OF_INSERT;
+    int CHANCE_OF_GET_MIN;
+    int CHANCE_OF_EXTRACT_MIN;
+    int CHANCE_OF_MELD;
+
+    _TESTING_PARAMETRES_ (int iterations = 1000000, int c1 = 1, int c2 = 1, int c3 = 1, int c4 = 1, int c5 = 1) {
+        NUM_OF_ITERATIONS = iterations;
+        CHANCE_OF_ADD_HEAP = c1;
+        CHANCE_OF_INSERT = c2;
+        CHANCE_OF_GET_MIN = c3;
+        CHANCE_OF_EXTRACT_MIN = c4;
+        CHANCE_OF_MELD = c5;
+    }
+};
+
 
 enum Action { add_heap, insert, get_min, extract_min, meld };
 
-Action getNextAction () {
-    int sum = _TESTING__CHANCE_OF_ADD_HEAP + _TESTING__CHANCE_OF_INSERT + _TESTING__CHANCE_OF_GET_MIN +
-              _TESTING__CHANCE_OF_EXTRACT_MIN + _TESTING__CHANCE_OF_MELD;
+Action getNextAction (const _TESTING_PARAMETRES_ &TEST) {
+    int sum = TEST.CHANCE_OF_ADD_HEAP + TEST.CHANCE_OF_INSERT + TEST.CHANCE_OF_GET_MIN +
+              TEST.CHANCE_OF_EXTRACT_MIN + TEST.CHANCE_OF_MELD;
 
     int action = rand() % sum;
-    if (action < _TESTING__CHANCE_OF_ADD_HEAP) {
+    if (action < TEST.CHANCE_OF_ADD_HEAP) {
         return add_heap;
-    } else if (action < _TESTING__CHANCE_OF_ADD_HEAP + _TESTING__CHANCE_OF_INSERT) {
+    } else if (action < TEST.CHANCE_OF_ADD_HEAP + TEST.CHANCE_OF_INSERT) {
         return insert;
-    } else if (action < _TESTING__CHANCE_OF_ADD_HEAP + _TESTING__CHANCE_OF_INSERT + _TESTING__CHANCE_OF_GET_MIN) {
+    } else if (action < TEST.CHANCE_OF_ADD_HEAP + TEST.CHANCE_OF_INSERT + TEST.CHANCE_OF_GET_MIN) {
         return get_min;
-    } else if (action < _TESTING__CHANCE_OF_ADD_HEAP + _TESTING__CHANCE_OF_INSERT + _TESTING__CHANCE_OF_GET_MIN +
-                        _TESTING__CHANCE_OF_EXTRACT_MIN)
+    } else if (action < TEST.CHANCE_OF_ADD_HEAP + TEST.CHANCE_OF_INSERT + TEST.CHANCE_OF_GET_MIN +
+                        TEST.CHANCE_OF_EXTRACT_MIN)
     {
         return extract_min;
     } else {
@@ -104,18 +117,20 @@ int getKey () {
 }*/
 
 template <class THeap1, class THeap2 = STLHeap>
-void testTwoHeaps (int iterations = _TESTING__NUM_OF_ITERATIONS) {
+void testTwoHeaps (const _TESTING_PARAMETRES_ &TEST) {
     HeapInterface<THeap1> heap1;
     HeapInterface<THeap2> heap2;
 
-    for (int i = 0; i < iterations; ++i) {
+    _TESTING_PARAMETRES_ k(5);
+
+    for (int i = 0; i < TEST.NUM_OF_ITERATIONS; ++i) {
         //std::cout << i << std::endl;
         if (heap1.size() != heap2.size()) {
             std::cout << i << std::endl;
             throw;
         }
 
-        Action type = getNextAction();
+        Action type = getNextAction(TEST);
 
         if (type == add_heap) {
             int key = getKey();
@@ -161,15 +176,15 @@ void testTwoHeaps (int iterations = _TESTING__NUM_OF_ITERATIONS) {
 }
 
 TEST (BHeap, Test) {
-    ASSERT_NO_THROW(testTwoHeaps<BinomialHeap>());
+    ASSERT_NO_THROW(testTwoHeaps<BinomialHeap>(_TESTING_PARAMETRES_()));
 }
 
 TEST (LeftistHeap, Test) {
-    ASSERT_NO_THROW(testTwoHeaps<LeftistHeap>());
+    ASSERT_NO_THROW(testTwoHeaps<LeftistHeap>(_TESTING_PARAMETRES_()));
 }
 
 TEST (SkewHeap, Test) {
-    ASSERT_NO_THROW(testTwoHeaps<SkewHeap>());
+    ASSERT_NO_THROW(testTwoHeaps<SkewHeap>(_TESTING_PARAMETRES_()));
 }
 
 /*int main() {
