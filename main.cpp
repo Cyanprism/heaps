@@ -2,9 +2,11 @@
 #include "gtest/gtest.h"
 #include "IHeap.h"
 #include "BinomialHeap.h"
-#include "LeftistHeap.h"
-#include "SkewHeap.h"
+#include "NewHeap.h"
+//#include "LeftistHeap.h"
+//#include "SkewHeap.h"
 #include "STLHeap.h"
+
 
 template <class THeap>
 class HeapInterface {
@@ -65,22 +67,36 @@ void HeapInterface<THeap>::clear () {
     array_.clear();
 }
 
+enum Action { add_heap, insert, get_min, extract_min, meld };
+
+Action getNextAction () {
+    return Action(rand() % 5);
+}
+
+int getKey () {
+    return rand();
+}
+
+int getIndex () {
+    return rand();
+}
+
 template <class THeap1, class THeap2 = STLHeap>
-void testTwoHeaps (int iterations = 10000000) {
+void testTwoHeaps (int iterations = 1000000) {
     HeapInterface<THeap1> heap1;
     HeapInterface<THeap2> heap2;
 
     for (int i = 0; i < iterations; ++i) {
-        //std::cout << i << std::endl;
+        std::cout << i << std::endl;
         if (heap1.size() != heap2.size()) {
             std::cout << i << std::endl;
             throw;
         }
 
-        int type = rand() % 6;
+        Action type = getNextAction();
 
-        if (type == 0) {
-            int key = rand();
+        if (type == add_heap) {
+            int key = getKey();
 
             heap1.addHeap(key);
             heap2.addHeap(key);
@@ -127,10 +143,16 @@ TEST (BHeap, Test) {
 }
 
 TEST (LeftistHeap, Test) {
-    ASSERT_NO_THROW(testTwoHeaps<LeftistHeap>());
+    ASSERT_NO_THROW(testTwoHeaps<NewHeap<LeftistHeap>>());
 }
 
 TEST (SkewHeap, Test) {
-    ASSERT_NO_THROW(testTwoHeaps<SkewHeap>());
+    ASSERT_NO_THROW(testTwoHeaps<NewHeap<SkewHeap>>());
+}
+
+int main() {
+    while (true) {
+        testTwoHeaps<NewHeap<SkewHeap>>();
+    }
 }
 

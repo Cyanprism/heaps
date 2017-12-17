@@ -3,6 +3,7 @@
 #include <vector>
 #include <algorithm>
 #include "IHeap.h"
+#include "SkewHeap.h"
 
 class LeftistHeap : public IHeap {
 private:

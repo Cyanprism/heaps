@@ -5,7 +5,7 @@
 #include "IHeap.h"
 
 class SkewHeap : public IHeap {
-private:
+protected:
     struct SkewHeapElement_ {
         int value;
         SkewHeapElement_ *leftChild;
