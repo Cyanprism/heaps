@@ -7,6 +7,8 @@
 //#include "SkewHeap.h"
 #include "STLHeap.h"
 
+const int _TESTING__NUM_OF_ITERATIONS = 100000000;
+const int _TESTING__MAX_NUM_OF_EQUAL_ACTIONS = 1000;
 
 template <class THeap>
 class HeapInterface {
@@ -70,24 +72,33 @@ void HeapInterface<THeap>::clear () {
 enum Action { add_heap, insert, get_min, extract_min, meld };
 
 Action getNextAction () {
-    return Action(rand() % 5);
+    static int cnt = 0;
+    Action ans;
+
+    if (cnt == 0) {
+        cnt = rand() % _TESTING__MAX_NUM_OF_EQUAL_ACTIONS + 1;
+        ans = Action(rand() % 5);
+    }
+
+    --cnt;
+    return ans;
 }
 
 int getKey () {
     return rand();
 }
 
-int getIndex () {
+/*int getIndex () {
     return rand();
-}
+}*/
 
 template <class THeap1, class THeap2 = STLHeap>
-void testTwoHeaps (int iterations = 1000000) {
+void testTwoHeaps (int iterations = _TESTING__NUM_OF_ITERATIONS) {
     HeapInterface<THeap1> heap1;
     HeapInterface<THeap2> heap2;
 
     for (int i = 0; i < iterations; ++i) {
-        std::cout << i << std::endl;
+        //std::cout << i << std::endl;
         if (heap1.size() != heap2.size()) {
             std::cout << i << std::endl;
             throw;
@@ -150,9 +161,9 @@ TEST (SkewHeap, Test) {
     ASSERT_NO_THROW(testTwoHeaps<NewHeap<SkewHeap>>());
 }
 
-int main() {
+/*int main() {
     while (true) {
         testTwoHeaps<NewHeap<SkewHeap>>();
     }
-}
+}*/
 
