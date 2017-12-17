@@ -4,11 +4,10 @@
 
 class IHeap {
 public:
-    virtual size_t addHeap (int key) = 0;
-    virtual void insert (size_t index, int key) = 0;
-    virtual int getMin (size_t index) = 0;
-    virtual void extractMin (size_t index) = 0;
-    virtual void meld (size_t index1, size_t index2) = 0;
-    virtual bool empty (size_t index) = 0;
-    virtual size_t size () = 0;
+    //virtual ~IHeap () = 0;
+    virtual void insert (int _key) = 0;
+    virtual int getMin () = 0;
+    virtual void extractMin () = 0;
+    virtual void merge (IHeap &_root) = 0;
+    virtual bool empty () = 0;
 };

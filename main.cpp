@@ -1,32 +1,82 @@
 #include <iostream>
 #include "gtest/gtest.h"
 #include "IHeap.h"
-#include "BHeap.h"
-#include "LHeap.h"
-#include "SHeap.h"
-#include "STDHeap.h"
+#include "BinomialHeap.h"
+#include "LeftistHeap.h"
+#include "SkewHeap.h"
+#include "STLHeap.h"
 
-void testHeaps (IHeap &heap1, IHeap &heap2, int iterations = 5000000);
+void testTwoHeaps (HeapInterface &heap1, HeapInterface &heap2, int iterations = 5000000);
 
 TEST (BHeap, Test) {
-    BHeap heap1;
-    STDHeap heap2;
-    ASSERT_NO_THROW(testHeaps(heap1, heap2));
+    HeapInterface<BinomialHeap> heap1;
+    HeapInterface<STLHeap> heap2;
+    ASSERT_NO_THROW(testTwoHeaps(heap1, heap2));
 }
 
-TEST (LHeap, Test) {
-    LHeap heap1;
-    STDHeap heap2;
-    ASSERT_NO_THROW(testHeaps(heap1, heap2));
+TEST (LeftistHeap, Test) {
+    HeapInterface<LeftistHeap> heap1;
+    HeapInterface<STLHeap> heap2;
+    ASSERT_NO_THROW(testTwoHeaps(heap1, heap2));
 }
 
-TEST (SHeap, Test) {
-    SHeap heap1;
-    STDHeap heap2;
-    ASSERT_NO_THROW(testHeaps(heap1, heap2));
+TEST (SkewHeap, Test) {
+    HeapInterface<SkewHeap> heap1;
+    HeapInterface<STLHeap> heap2;
+    ASSERT_NO_THROW(testTwoHeaps(heap1, heap2));
 }
 
-void testHeaps (IHeap &heap1, IHeap &heap2, int iterations) {
+template <class THeap>
+class HeapInterface {
+private:
+    std::vector<THeap> array_;
+public:
+    explicit HeapInterface () = default;
+    void addHeap (int _key);
+    void insert (int _index, int _key);
+    int getMin (int _index);
+    void extractMin (int _index);
+    void meld (int _index1, int _index2);
+    bool empty (int _index);
+    int size ();
+};
+
+template <class THeap>
+void HeapInterface<THeap>::addHeap (int _key) {
+    array_.push_back(THeap(_key));
+}
+
+template <class THeap>
+void HeapInterface<THeap>::insert (int _index, int _key) {
+    array_[_index].insert(_key);
+}
+
+template <class THeap>
+int HeapInterface<THeap>::getMin (int _index) {
+    return array_[_index].getMin();
+}
+
+template <class THeap>
+void HeapInterface<THeap>::extractMin (int _index) {
+    array_[_index].extractMin();
+}
+
+template <class THeap>
+void HeapInterface<THeap>::meld (int _index1, int _index2) {
+    array_[_index1].merge(array_[_index2]);
+}
+
+template <class THeap>
+bool HeapInterface<THeap>::empty (int _index) {
+    return array_[_index].empty();
+}
+
+template <class THeap>
+int HeapInterface<THeap>::size () {
+    return array_.size();
+}
+
+void testTwoHeaps (HeapInterface &heap1, HeapInterface &heap2, int iterations = 5000000) {
     for (int i = 0; i < iterations; ++i) {
         if (heap1.size() != heap2.size()) {
             std::cout << i << std::endl;
