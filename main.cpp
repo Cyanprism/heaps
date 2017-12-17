@@ -165,11 +165,11 @@ TEST (BHeap, Test) {
 }
 
 TEST (LeftistHeap, Test) {
-    ASSERT_NO_THROW(testTwoHeaps<NewHeap<LeftistHeap>>());
+    ASSERT_NO_THROW(testTwoHeaps<LeftistHeap>());
 }
 
 TEST (SkewHeap, Test) {
-    ASSERT_NO_THROW(testTwoHeaps<NewHeap<SkewHeap>>());
+    ASSERT_NO_THROW(testTwoHeaps<SkewHeap>());
 }
 
 /*int main() {

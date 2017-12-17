@@ -25,28 +25,28 @@ struct Base_ {
     virtual void additional () = 0;
 };
 
-struct SkewHeap : public Base_ {
-    explicit SkewHeap (int _value) : Base_(_value) {}
-    ~SkewHeap () = default;
+struct SkewHeap_ : public Base_ {
+    explicit SkewHeap_ (int _value) : Base_(_value) {}
+    ~SkewHeap_ () = default;
     void additional () {
         std::swap(this->leftChild, this->rightChild);
     }
 };
 
-struct LeftistHeap : public Base_ {
+struct LeftistHeap_ : public Base_ {
     int rank;
-    explicit LeftistHeap (int _value) : Base_(_value), rank(1) {}
-    ~LeftistHeap () = default;
+    explicit LeftistHeap_ (int _value) : Base_(_value), rank(1) {}
+    ~LeftistHeap_ () = default;
     void additional () {
         if (this->leftChild == NULL || this->rightChild == NULL) {
             this->rank = 1;
         } else {
-            this->rank = std::min(dynamic_cast<LeftistHeap*>(this->leftChild)->rank,
-                                  dynamic_cast<LeftistHeap*>(this->rightChild)->rank) + 1;
+            this->rank = std::min(dynamic_cast<LeftistHeap_*>(this->leftChild)->rank,
+                                  dynamic_cast<LeftistHeap_*>(this->rightChild)->rank) + 1;
         }
 
         if (this->leftChild == NULL || (this->rightChild == NULL &&
-                dynamic_cast<LeftistHeap*>(this->leftChild)->rank < dynamic_cast<LeftistHeap*>(this->rightChild)->rank))
+                dynamic_cast<LeftistHeap_*>(this->leftChild)->rank < dynamic_cast<LeftistHeap_*>(this->rightChild)->rank))
         {
             std::swap(this->leftChild, this->rightChild);
         }
@@ -117,3 +117,5 @@ bool NewHeap<TElement>::empty () {
     return (heap_ == NULL);
 }
 
+typedef NewHeap<SkewHeap_> SkewHeap;
+typedef NewHeap<LeftistHeap_> LeftistHeap;
