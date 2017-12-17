@@ -10,6 +10,7 @@ class STLHeap : public IHeap {
 private:
     std::priority_queue< int, std::vector<int>, std::greater<int> > heap_;
 public:
+    STLHeap (int _key) { heap_.push(_key); }
     void insert (int key) override;
     int getMin () override;
     void extractMin () override;

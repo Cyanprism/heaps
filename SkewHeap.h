@@ -24,11 +24,12 @@ private:
 
     SkewHeapElement_ *meld_(SkewHeapElement_ *root1, SkewHeapElement_ *root2);
 
-    SkewHeapElement_ *heap_;
+    SkewHeapElement_ *heap_ = NULL;
 
 public:
-    SkewHeap (int _key) { heap_ = new SkewHeapElement_(_key); }
-    ~SkewHeap () { for (auto it = heaps.begin(); it != heaps.end(); ++it) { delete *it; } }
+    explicit SkewHeap (int _key) { heap_ = new SkewHeapElement_(_key); }
+    explicit SkewHeap (SkewHeapElement_ *_ptr) { heap_ = _ptr; }
+    ~SkewHeap () { if (heap_ != NULL) { delete heap_; } }
     void insert (int _key) override;
     int getMin () override;
     void extractMin () override;
@@ -61,13 +62,13 @@ int SkewHeap::getMin () {
 
 void SkewHeap::extractMin () {
     SkewHeapElement_ *tmp = heap_;
-    heap_ = meld_(heap_->leftChild, heap_->rightChild);
+    heap_ = meld_(heap_->rightChild, heap_->leftChild);
     tmp->leftChild = tmp->rightChild = NULL;
     delete tmp;
 }
 
 void SkewHeap::merge (IHeap &_root) {
-    SkewHeap root = dynamic_cast<SkewHeap &>(_root);
+    SkewHeap &root = dynamic_cast<SkewHeap&>(_root);
     heap_ = meld_(heap_, root.heap_);
     root.heap_ = NULL;
 }

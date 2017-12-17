@@ -83,6 +83,6 @@ void LeftistHeap::merge (IHeap &_root) {
 }
 
 bool LeftistHeap::empty () {
-    return (heap == NULL);
+    return (heap_ == NULL);
 }
 
