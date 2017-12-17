@@ -7,9 +7,6 @@
 //#include "SkewHeap.h"
 #include "STLHeap.h"
 
-const int _TESTING__NUM_OF_ITERATIONS = 100000000;
-const int _TESTING__MAX_NUM_OF_EQUAL_ACTIONS = 1000;
-
 template <class THeap>
 class HeapInterface {
 private:
@@ -69,19 +66,33 @@ void HeapInterface<THeap>::clear () {
     array_.clear();
 }
 
+const int _TESTING__NUM_OF_ITERATIONS = 1000000;
+const int _TESTING__CHANCE_OF_ADD_HEAP      = 1;
+const int _TESTING__CHANCE_OF_INSERT        = 1;
+const int _TESTING__CHANCE_OF_GET_MIN       = 1;
+const int _TESTING__CHANCE_OF_EXTRACT_MIN   = 1;
+const int _TESTING__CHANCE_OF_MELD          = 1;
+
 enum Action { add_heap, insert, get_min, extract_min, meld };
 
 Action getNextAction () {
-    static int cnt = 0;
-    Action ans;
+    int sum = _TESTING__CHANCE_OF_ADD_HEAP + _TESTING__CHANCE_OF_INSERT + _TESTING__CHANCE_OF_GET_MIN +
+              _TESTING__CHANCE_OF_EXTRACT_MIN + _TESTING__CHANCE_OF_MELD;
 
-    if (cnt == 0) {
-        cnt = rand() % _TESTING__MAX_NUM_OF_EQUAL_ACTIONS + 1;
-        ans = Action(rand() % 5);
+    int action = rand() % sum;
+    if (action < _TESTING__CHANCE_OF_ADD_HEAP) {
+        return add_heap;
+    } else if (action < _TESTING__CHANCE_OF_ADD_HEAP + _TESTING__CHANCE_OF_INSERT) {
+        return insert;
+    } else if (action < _TESTING__CHANCE_OF_ADD_HEAP + _TESTING__CHANCE_OF_INSERT + _TESTING__CHANCE_OF_GET_MIN) {
+        return get_min;
+    } else if (action < _TESTING__CHANCE_OF_ADD_HEAP + _TESTING__CHANCE_OF_INSERT + _TESTING__CHANCE_OF_GET_MIN +
+                        _TESTING__CHANCE_OF_EXTRACT_MIN)
+    {
+        return extract_min;
+    } else {
+        return meld;
     }
-
-    --cnt;
-    return ans;
 }
 
 int getKey () {
